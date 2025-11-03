@@ -101,4 +101,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total, records);
     }
 
+    /**
+     * 启用禁用员工账号
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        // 本质上是修改（update）Employee中的status属性
+        // 后续还要修改更新时间等其他字段，用实体类封装传入的参数比较号
+
+        // 方法一：
+        // Employee employee = new Employee();
+        // employee.setStatus(status);
+        // employee.setId(id);
+        // employee.setUpdateTime(LocalDateTime.now());
+
+        // 方法二：@Builder
+        Employee employee = Employee.builder()
+                                    .id(id)
+                                    .status(status)
+                                    .updateTime(LocalDateTime.now())
+                                    .build();
+        employeeMapper.update(employee);
+    }
+
 }
