@@ -73,7 +73,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCartMapper.insert(shoppingCart);
         }
 
-
     }
 
     /**
@@ -86,5 +85,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .userId(userId)
                 .build();
         return shoppingCartMapper.list(shoppingCart);
+    }
+
+    /**
+     * 清空购物车
+     */
+    @Override
+    public void cleanShoppingCart() {
+        Long userId = BaseContext.getCurrentId();
+        shoppingCartMapper.deleteByUserId(userId);
     }
 }
