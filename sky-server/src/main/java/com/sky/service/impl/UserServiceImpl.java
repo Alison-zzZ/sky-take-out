@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
 
         // 3. 判断当前用户是否为外卖系统新用户（openid是否在用户表中）
         // 如果是新用户，自动完成注册（封装成User对象，保存到用户表中）
-        User user = new User();
-        if(userMapper.getByOpenid(openid) == null){
+        User user = userMapper.getByOpenid(openid);
+        if(user == null){
             user = User.builder()
                     .openid(openid)
                     .createTime(LocalDateTime.now())
