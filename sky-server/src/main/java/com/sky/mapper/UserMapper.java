@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.entity.AddressBook;
 import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -19,4 +20,10 @@ public interface UserMapper {
      * @param user
      */
     void insert(User user);
+
+    /**
+     * 根据id查询
+     */
+    @Select("select * from user where id = #{userid}")
+    User getById(Long userId);
 }
