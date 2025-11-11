@@ -87,13 +87,16 @@
     </select>
 
     <select id="countByMap" resultType="java.lang.Integer">
-        select count(id) from user 
+        select count(id) from orders
         <where>
             <if test="beginTime != null">
-                and create_time &gt; #{beginTime}
+                order_time &gt; #{beginTime}
             </if>
             <if test="endTime != null">
-                and create_time &lt; #{endTime}
+                and order_time &lt; #{endTime}
+            </if>
+            <if test="status != null">
+                and status = #{status}
             </if>
         </where>
     </select>

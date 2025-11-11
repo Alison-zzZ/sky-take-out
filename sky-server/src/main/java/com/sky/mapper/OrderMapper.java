@@ -70,7 +70,7 @@ public interface OrderMapper {
     Double sumByMap(Map map);
 
     /**
-     * 统计新增用户和总用户
+     * 统计当天订单总数和有效订单数
      */
     Integer countByMap(Map map);
 }
