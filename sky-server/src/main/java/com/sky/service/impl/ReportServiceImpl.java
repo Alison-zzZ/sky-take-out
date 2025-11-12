@@ -1,10 +1,12 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -185,5 +188,34 @@ public class ReportServiceImpl implements ReportService {
                 .totalOrderCount(totalOrderCount)
                 .orderCompletionRate(orderCompletionRate)
                 .build();
+    }
+
+    @Override
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+
+        // 要查两张表：从order_detail表中查菜品份数，从orders表中保证订单已完成、未被取消
+        // select od.name, sum(od.number) from order_detail od, orders o
+        // where od.order_id = o.id
+        //      and o.status = 5
+        //      and o.order_time between (beginTime, endTime)
+        // group by od.name
+        // order by sum(number) desc
+        // limit 0,10
+
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        List<GoodsSalesDTO> salesTop10List = orderMapper.getSalesTop(beginTime, endTime);
+        List<String> nameList = salesTop10List.stream().map(GoodsSalesDTO::getName).collect(Collectors.toList());
+        List<Integer> numberList = salesTop10List.stream().map(GoodsSalesDTO::getNumber).collect(Collectors.toList());
+
+        String nameString = StringUtils.join(nameList, ",");
+        String numberString = StringUtils.join(numberList, ",");
+
+        return SalesTop10ReportVO
+                .builder()
+                .nameList(nameString)
+                .numberList(numberString)
+                .build();
+
     }
 }
